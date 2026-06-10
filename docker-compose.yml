@@ -1,0 +1,12 @@
+services:
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  main-service:
+    build:
+      context: ./app
+    ports:
+      - "8000:8000"
