@@ -6,7 +6,11 @@ services:
       - "8025:8025"
 
   main-service:
+    #tty: true
+    image: 100.110.100.100:5000/practice_a1-main-service:latest
     build:
       context: ./app
     ports:
       - "8000:8000"
+
+    #platform: linux/arm64/v8

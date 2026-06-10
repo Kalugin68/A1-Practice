@@ -13,13 +13,14 @@ def send_email(data: EmailRequest):
     msg["From"] = "sashakalugin74@gmail.com"
     msg["To"] = data.email
 
-    msg.set_content("Hello World")
+    msg.set_content(data.body)
 
     with smtplib.SMTP("mailpit", 1025) as smtp:
         smtp.send_message(msg)
 
     return {"message": "Email sent successfully",
-            "email": data.email}
+            "email": data.email,
+            "body": data.body}
 
 @app.get("/")
 def root():
