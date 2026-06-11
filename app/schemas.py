@@ -1,7 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, Field
 
 
 class EmailRequest(BaseModel):
-    email: str
-    subject: str
+    email: EmailStr
+    subject: str = Field(..., min_length=1)
     body: str
+    template: str = Field(..., min_length=1)
