@@ -1,25 +1,18 @@
-import smtplib
 from fastapi import FastAPI
-from email.message import EmailMessage
 from schemas import EmailRequest
-
+from services.mailer import EmailService
 app = FastAPI()
 
 @app.post("/send")
 def send_email(data: EmailRequest):
-    msg = EmailMessage()
+    """Маршрут отправки сообщения"""
 
-    msg["Subject"] = "Test message"
-    msg["From"] = "sashakalugin74@gmail.com"
-    msg["To"] = data.email
+    # Создание экземпляра класса и вызов метода
+    EmailService(host="mailpit", port=1025).send_email(
+        data.email, data.subject, data.body)
 
-    msg.set_content(data.body)
-
-    with smtplib.SMTP("mailpit", 1025) as smtp:
-        smtp.send_message(msg)
-
-    return {"message": "Email sent successfully",
-            "email": data.email,
+    return {"email": data.email,
+            "subject": data.subject,
             "body": data.body}
 
 @app.get("/")
