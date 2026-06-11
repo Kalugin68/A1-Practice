@@ -7,7 +7,7 @@ services:
 
   main-service:
     #tty: true
-    image: 100.110.100.100:5000/practice_a1-main-service:latest
+    #image: 100.110.100.100:5000/practice_a1-main-service:latest
     build:
       context: ./app
     ports:
