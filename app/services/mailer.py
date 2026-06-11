@@ -9,7 +9,7 @@ class EmailService:
         self.host = host
         self.port = port
 
-    def send_email(self, to, subject, body):
+    def send_email(self, to, subject, template):
         """Метод отправки сообщения на SMTP-сервер"""
 
         msg = EmailMessage()
@@ -17,7 +17,8 @@ class EmailService:
         msg["subject"] = subject
         msg["from"] = "sashakalugin74@gmail.com"
         msg["to"] = to
-        msg.set_content(body)
+
+        msg.add_alternative(template, subtype="html")
 
         with smtplib.SMTP(self.host, self.port) as smtp:
             smtp.send_message(msg)

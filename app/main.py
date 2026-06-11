@@ -9,13 +9,15 @@ app = FastAPI()
 def send_email(data: EmailRequest):
     """Маршрут отправки сообщения"""
 
+    template_content = TemplateService().get_template_content(data.template)
+
     # Создание экземпляра класса и вызов метода
     EmailService(host="mailpit", port=1025).send_email(
-        data.email, data.subject, data.body)
+        data.email, data.subject, template_content)
 
     return {"email": data.email,
             "subject": data.subject,
-            "body": data.body}
+            "template": template_content}
 
 @app.get("/templates")
 def get_templates():
