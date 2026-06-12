@@ -1,5 +1,7 @@
 from pathlib import Path
 from fastapi import UploadFile, HTTPException
+from jinja2 import Template
+
 
 class TemplateService:
     """Класс, отвечающий за работу с шаблонами"""
@@ -51,3 +53,11 @@ class TemplateService:
 
         with open(template_path, "r", encoding="utf-8") as f:
             return f.read()
+
+    def render_template(self, template_name: str, context: dict):
+        """Метод, который рендерит html-шаблон"""
+
+        template_content = self.get_template_content(template_name)
+        template = Template(template_content)
+
+        return template.render(**context)

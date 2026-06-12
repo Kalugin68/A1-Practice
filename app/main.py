@@ -25,14 +25,15 @@ app = FastAPI(lifespan=lifespan)
 def send_email(data: EmailRequest, request: Request):
     """Маршрут отправки сообщения"""
 
-    template_content = request.app.state.template_service.get_template_content(data.template)
+    template_content = request.app.state.template_service.render_template(data.template, data.context)
 
     request.app.state.mailer.send_email(
         data.email, data.subject, template_content)
 
     return {"email": data.email,
             "subject": data.subject,
-            "template": template_content}
+            "template": template_content,
+            "context": data.context}
 
 @app.get("/templates")
 def get_templates(request: Request):
