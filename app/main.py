@@ -2,8 +2,11 @@ from fastapi import FastAPI, UploadFile
 from schemas.email_schema import EmailRequest
 from services.mailer import EmailService
 from services.template_service import TemplateService
+from schemas.settings import Settings
 
 app = FastAPI()
+
+settings = Settings()
 
 @app.post("/send")
 def send_email(data: EmailRequest):
@@ -12,7 +15,7 @@ def send_email(data: EmailRequest):
     template_content = TemplateService().get_template_content(data.template)
 
     # Создание экземпляра класса и вызов метода
-    EmailService(host="mailpit", port=1025).send_email(
+    EmailService(host=settings.smtp_host, port=settings.smtp_port).send_email(
         data.email, data.subject, template_content)
 
     return {"email": data.email,

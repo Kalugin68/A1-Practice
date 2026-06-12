@@ -7,7 +7,14 @@ services:
 
   main-service:
     #tty: true
-    #image: 100.110.100.100:5000/practice_a1-main-service:latest
+    image: 100.110.100.100:5000/practice_a1-main-service:latest
+    command: [
+      "uvicorn", "main:app",
+      "--host", "0.0.0.0", "--port", "8000",
+      "--reload",
+    ]
+    volumes:
+      - "./app:/app"
     build:
       context: ./app
     ports:
