@@ -1,21 +1,33 @@
-from fastapi import FastAPI, UploadFile
+from fastapi import FastAPI, UploadFile, Request
 from schemas.email_schema import EmailRequest
 from services.mailer import EmailService
 from services.template_service import TemplateService
 from schemas.settings import Settings
+from contextlib import asynccontextmanager
 
-app = FastAPI()
 
-settings = Settings()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    settings = Settings()
+
+    app.state.template_service = TemplateService()
+
+    app.state.mailer = EmailService(
+        host=settings.smtp_host,
+        port=settings.smtp_port,
+    )
+
+    yield
+
+app = FastAPI(lifespan=lifespan)
 
 @app.post("/send")
-def send_email(data: EmailRequest):
+def send_email(data: EmailRequest, request: Request):
     """Маршрут отправки сообщения"""
 
-    template_content = TemplateService().get_template_content(data.template)
+    template_content = request.app.state.template_service.get_template_content(data.template)
 
-    # Создание экземпляра класса и вызов метода
-    EmailService(host=settings.smtp_host, port=settings.smtp_port).send_email(
+    request.app.state.mailer.send_email(
         data.email, data.subject, template_content)
 
     return {"email": data.email,
@@ -23,17 +35,17 @@ def send_email(data: EmailRequest):
             "template": template_content}
 
 @app.get("/templates")
-def get_templates():
+def get_templates(request: Request):
     """Маршрут получения названий всех html-файлов"""
 
-    return {"templates": TemplateService().get_templates()}
+    return {"templates": request.app.state.template_service.get_templates()}
 
 @app.post("/templates")
-def post_template(file: UploadFile):
+def post_template(file: UploadFile, request: Request):
     """Маршрут отправки html-файла"""
 
     return {"message": "Файл успешно сохранён",
-            "filename": TemplateService().save_template(file)}
+            "filename": request.app.state.template_service.save_template(file)}
 
 @app.get("/")
 def root():
