@@ -26,9 +26,8 @@ class TemplateService:
         """Метод, сохраняющий шаблон в директорию templates"""
 
         if Path(file.filename).suffix != ".html":
-            raise HTTPException(
-                status_code=400,
-                detail="Файл не соответствует расширению .html"
+            raise ValueError(
+                "Файл не соответствует расширению .html"
             )
 
         template_path = self.templates_dir / file.filename
@@ -46,9 +45,8 @@ class TemplateService:
         template_path = self.templates_dir / template_name
 
         if not template_path.exists():
-            raise HTTPException(
-                status_code=404,
-                detail="Шаблон не найден"
+            raise FileNotFoundError(
+                f'Template {template_name} not found.'
             )
 
         with open(template_path, "r", encoding="utf-8") as f:
