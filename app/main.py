@@ -7,7 +7,7 @@ from services.mailer import EmailService
 from services.template_service import TemplateService
 from schemas.settings import Settings
 from contextlib import asynccontextmanager
-from routers import email_router, template_router
+from routers import email_router, template_router, healthcheck_router
 from services.template_service import TemplateService
 from fastapi.responses import JSONResponse
 
@@ -30,6 +30,7 @@ app = FastAPI(lifespan=lifespan)
 
 app.include_router(email_router.router)
 app.include_router(template_router.router)
+app.include_router(healthcheck_router.router)
 
 @app.exception_handler(FileNotFoundError)
 def file_not_found_handler(request: Request, exc: FileNotFoundError):
@@ -55,6 +56,16 @@ def value_error_handler(request: Request, exc: ValueError):
 def global_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
         status_code=500,
+        content={
+            "status": "error",
+            "message": str(exc)
+        }
+    )
+
+@app.exception_handler(ConnectionError)
+def connection_error_handler(request: Request, exc: ConnectionError):
+    return JSONResponse(
+        status_code=503,
         content={
             "status": "error",
             "message": str(exc)

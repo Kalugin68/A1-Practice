@@ -22,3 +22,15 @@ class EmailService:
 
         with smtplib.SMTP(self.host, self.port) as smtp:
             smtp.send_message(msg)
+
+    def healthcheck(self):
+        """Короткий пинг до smtp-сервера"""
+
+        try:
+            with smtplib.SMTP(self.host, self.port, timeout=5) as smtp:
+                smtp.noop()
+
+        except Exception as e:
+            raise ConnectionError(
+                "Service Unavailable"
+            ) from e
