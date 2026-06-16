@@ -17,7 +17,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-          -t practice_github:latest \
+          -t kalugin68/a1_github:latest \
           ./app
 
       - name: Push Docker image
