@@ -15,6 +15,14 @@ jobs:
         run: |
           git clone ${{ gitea.server_url }}/${{ gitea.repository }}.git .
 
+      - name: Debug
+        run: |
+          pwd
+          whoami
+          uname -a
+          which docker
+          docker --version
+
       - name: Build Docker image
         run: |
           docker build \
