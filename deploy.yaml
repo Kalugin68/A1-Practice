@@ -1,0 +1,36 @@
+name: Deploy FastAPI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build \
+          --platform linux/arm64 \
+          -t 100.110.100.100:5000/practice:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push \
+          100.110.100.100:5000/practice:latest
+
+  deploy:
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy
+        run: |
+          docker compose up -d
