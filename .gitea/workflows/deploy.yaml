@@ -11,8 +11,9 @@ jobs:
     runs-on: debian
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Clone repository
+        run: |
+          git clone http://localhost:3030/${{ gitea.repository }}.git .
 
       - name: Build Docker image
         run: |
@@ -32,8 +33,9 @@ jobs:
     runs-on: debian
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Clone repository
+        run: |
+          git clone http://localhost:3000/${{ gitea.repository }}.git .
 
       - name: Deploy
         run: |
