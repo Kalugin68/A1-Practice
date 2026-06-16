@@ -8,7 +8,7 @@ on:
 jobs:
 
   build:
-    runs-on: debian
+    runs-on: ubuntu-latest
 
     steps:
       - name: Clone repository
@@ -30,7 +30,7 @@ jobs:
   deploy:
     needs: build
 
-    runs-on: debian
+    runs-on: ubuntu-latest
 
     steps:
       - name: Clone repository
