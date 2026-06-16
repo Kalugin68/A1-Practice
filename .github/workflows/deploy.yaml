@@ -17,13 +17,12 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-          -t 100.110.100.100:5000/practice:latest \
+          -t practice_github:latest \
           ./app
 
       - name: Push Docker image
         run: |
-          docker push \
-          100.110.100.100:5000/practice:latest
+          docker push kalugin68/a1_github:latest
 
   deploy:
     needs: build
@@ -37,4 +36,5 @@ jobs:
 
       - name: Deploy
         run: |
+          docker pull kalugin68/a1_github:latest
           docker compose up -d
