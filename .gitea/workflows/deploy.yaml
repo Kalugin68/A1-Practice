@@ -18,7 +18,8 @@ jobs:
         run: |
           docker build \
           --platform linux/arm64 \
-          -t 100.110.100.100:5000/practice:latest .
+          -t 100.110.100.100:5000/practice:latest \
+          ./app
 
       - name: Push Docker image
         run: |
@@ -31,6 +32,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Deploy
         run: |
           docker compose up -d
